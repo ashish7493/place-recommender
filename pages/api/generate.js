@@ -19,7 +19,7 @@ export default async function (req, res) {
   if (animal.trim().length === 0) {
     res.status(400).json({
       error: {
-        message: "Please enter a valid animal",
+        message: "Enter valid character",
       }
     });
     return;
@@ -30,6 +30,7 @@ export default async function (req, res) {
       model: "text-davinci-003",
       prompt: generatePrompt(animal),
       temperature: 0.6,
+      max_tokens: 100,
     });
     res.status(200).json({ result: completion.data.choices[0].text });
   } catch(error) {
@@ -48,15 +49,12 @@ export default async function (req, res) {
   }
 }
 
-function generatePrompt(animal) {
-  const capitalizedAnimal =
-    animal[0].toUpperCase() + animal.slice(1).toLowerCase();
-  return `Suggest three names for an animal that is a superhero.
+function generatePrompt(word) {
+  
+  return ` When answering my prompt always format it in given format  1)  {output}   Time:-{Output}   Budget:-{Output}  3)  {output}   Time:-{Output}   Budget:-{Output}  
+  I am planning to visit a city give me top 3 places to visit also include the budget and time it will take in short.
 
-Animal: Cat
-Names: Captain Sharpclaw, Agent Fluffball, The Incredible Feline
-Animal: Dog
-Names: Ruff the Protector, Wonder Canine, Sir Barks-a-Lot
-Animal: ${capitalizedAnimal}
-Names:`;
+
+City: ${word}
+Place:`;
 }
